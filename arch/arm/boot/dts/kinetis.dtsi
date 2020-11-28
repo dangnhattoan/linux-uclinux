@@ -1,0 +1,412 @@
+/*
+ * Device tree for Freescale Kinetis SoC.
+ *
+ */
+#include "armv7-m.dtsi"
+#include "dt-bindings/clock/kinetis-mcg.h"
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	aliases {
+		pit0 = &pit;
+		pmx0 = &iomux;
+		serial0 = &uart0;
+		serial1 = &uart1;
+		serial2 = &uart2;
+		serial3 = &uart3;
+		serial4 = &uart4;
+		serial5 = &uart5;
+		esdhc0 = &esdhc0;
+		gpio0 = &gpioA;
+		gpio1 = &gpioB;
+		gpio2 = &gpioC;
+		gpio3 = &gpioD;
+		gpio4 = &gpioE;
+		gpio5 = &gpioF;
+		spi0 = &dspi0;
+		spi1 = &dspi1;
+		spi2 = &dspi2;
+		i2c0 = &i2c0;
+		i2c1 = &i2c1;
+	};
+
+	osc0erclk: osc0erclk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <50000000>;
+	};
+
+	// this clock is configured by U-Boot
+	nfc_clk: nfc_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <50000000>;
+	};
+
+	sdhc_clk: sdhc_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <150000000>;
+	};
+
+	usbhs_clk: ulpi_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <60000000>;
+	};
+
+
+	soc {
+		uart0: serial@4006a000 {
+			compatible = "fsl,vf610-uart";
+			reg = <0x4006a000 0x1000>;
+			interrupts = <45>, <46>;
+			interrupt-names = "uart-stat", "uart-err";
+			clocks = <&mcg CLOCK_UART0>;
+			clock-names = "ipg";
+			dmas = <&edma 0 2>, <&edma 0 3>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
+		uart1: serial@4006b000 {
+			compatible = "fsl,vf610-uart";
+			reg = <0x4006b000 0x1000>;
+			interrupts = <47>, <48>;
+			interrupt-names = "uart-stat", "uart-err";
+			clocks = <&mcg CLOCK_UART1>;
+			clock-names = "ipg";
+			dmas = <&edma 0 4>, <&edma 0 5>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
+		uart2: serial@4006c000 {
+			compatible = "fsl,vf610-uart";
+			reg = <0x4006c000 0x1000>;
+			interrupts = <49>, <50>;
+			interrupt-names = "uart-stat", "uart-err";
+			clocks = <&mcg CLOCK_UART2>;
+			clock-names = "ipg";
+			dmas = <&edma 0 6>, <&edma 0 7>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
+		uart3: serial@4006d000 {
+			compatible = "fsl,vf610-uart";
+			reg = <0x4006d000 0x1000>;
+			interrupts = <51>, <52>;
+			interrupt-names = "uart-stat", "uart-err";
+			clocks = <&mcg CLOCK_UART3>;
+			clock-names = "ipg";
+			dmas = <&edma 0 8>, <&edma 0 9>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
+		uart4: serial@400ea000 {
+			compatible = "fsl,vf610-uart";
+			reg = <0x400ea000 0x1000>;
+			interrupts = <53>, <54>;
+			interrupt-names = "uart-stat", "uart-err";
+			clocks = <&mcg CLOCK_UART4>;
+			clock-names = "ipg";
+			dmas = <&edma 0 10>, <&edma 0 11>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
+		uart5: serial@400eb000 {
+			compatible = "fsl,vf610-uart";
+			reg = <0x400eb000 0x1000>;
+			interrupts = <55>, <56>;
+			interrupt-names = "uart-stat", "uart-err";
+			clocks = <&mcg CLOCK_UART5>;
+			clock-names = "ipg";
+			dmas = <&edma 0 12>, <&edma 0 13>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
+		edma: dma-controller@40008000 {
+			compatible = "fsl,kinetis-edma";
+			reg = <0x40008000 0x2000>, /* DMAC */
+				<0x40021000 0x1000>, /* DMAMUX0 */
+				<0x40022000 0x1000>; /* DMAMUX1 */
+			#dma-cells = <2>;
+			dma-channels = <32>;
+			interrupts =	 <0>,  <1>,  <2>,  <3>,
+					 <4>,  <5>,  <6>,  <7>,
+					 <8>,  <9>, <10>, <11>,
+					<12>, <13>, <14>, <15>,
+					<16>;
+			interrupt-names = "edma-tx-0,16",
+					  "edma-tx-1,17",
+					  "edma-tx-2,18",
+					  "edma-tx-3,19",
+					  "edma-tx-4,20",
+					  "edma-tx-5,21",
+					  "edma-tx-6,22",
+					  "edma-tx-7,23",
+					  "edma-tx-8,24",
+					  "edma-tx-9,25",
+					  "edma-tx-10,26",
+					  "edma-tx-11,27",
+					  "edma-tx-12,28",
+					  "edma-tx-13,29",
+					  "edma-tx-14,30",
+					  "edma-tx-15,31",
+					  "edma-err";
+			clocks = <&mcg CLOCK_EDMA>,
+				 <&mcg CLOCK_DMAMUX0>, <&mcg CLOCK_DMAMUX1>;
+			clock-names = "edma", "dmamux0", "dmamux1";
+		};
+
+		iomux: pinmux@40049000 {
+			compatible = "fsl,kinetis-padconf";
+			reg = <0x40049000 0x6000>;
+			clocks = <&mcg CLOCK_PORTA>, <&mcg CLOCK_PORTB>,
+				<&mcg CLOCK_PORTC>, <&mcg CLOCK_PORTD>,
+				<&mcg CLOCK_PORTE>, <&mcg CLOCK_PORTF>;
+			status = "disabled";
+		};
+
+		gpioA: gpio@400ff000 {
+			compatible = "fsl,kinetis-gpio";
+			reg = <0x400ff000 0x40>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&iomux 0 0 32>;
+			interrupts = <87>;
+			status = "okay";
+		};
+
+		gpioB: gpio@400ff040 {
+			compatible = "fsl,kinetis-gpio";
+			reg = <0x400ff040 0x40>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&iomux 0 32 64>;
+			interrupts = <88>;
+			status = "okay";
+		};
+
+		gpioC: gpio@400ff080 {
+			compatible = "fsl,kinetis-gpio";
+			reg = <0x400ff080 0x40>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&iomux 0 64 96>;
+			interrupts = <89>;
+			status = "okay";
+		};
+
+		gpioD: gpio@400ff0c0 {
+			compatible = "fsl,kinetis-gpio";
+			reg = <0x400ff0c0 0x40>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&iomux 0 96 128>;
+			interrupts = <90>;
+			status = "okay";
+		};
+
+		gpioE: gpio@400ff100 {
+			compatible = "fsl,kinetis-gpio";
+			reg = <0x400ff100 0x40>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&iomux 0 128 160>;
+			interrupts = <91>;
+			status = "okay";
+		};
+
+		gpioF: gpio@400ff140 {
+			compatible = "fsl,kinetis-gpio";
+			reg = <0x400ff140 0x40>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&iomux 0 160 192>;
+			interrupts = <92>;
+			status = "okay";
+		};
+
+		pit: pit@40037000 {
+			compatible = "fsl,vf610-pit";
+			reg = <0x40037000 0x1000>;
+			interrupts = <71>;
+			clocks = <&mcg CLOCK_PIT>;
+			clock-names = "pit";
+			pit_cnt = <4>;
+		};
+
+		mcg: cmu@40064000 {
+			compatible = "fsl,kinetis-cmu";
+			reg = <0x40064000 0x14>;
+			#clock-cells = <1>;
+		};
+
+		fec: ethernet@400c0000 {
+			compatible = "fsl,kinetis-fec";
+			reg = <0x400c0000 0x1000>;
+			interrupts = <76>, <77>, <78>;
+			clocks = <&osc0erclk>, <&osc0erclk>;
+			clock-names = "ipg", "ahb";
+			status = "disabled";
+		};
+
+		dspi0: dspi0@4002c000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "fsl,kinetis-dspi", "fsl,vf610-dspi";
+			reg = <0x4002c000 0x1000>;
+			interrupts = <26>;
+			clocks = <&mcg CLOCK_SPI0>;
+			clock-names = "dspi";
+			dmas = <&edma 0 14>, <&edma 0 15>;
+			dma-names = "rx","tx";
+			spi-num-chipselects = <6>;
+			status = "disabled";
+		};
+
+		dspi1: dspi1@4002d000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "fsl,kinetis-dspi", "fsl,vf610-dspi";
+			reg = <0x4002d000 0x1000>;
+			interrupts = <27>;
+			clocks = <&mcg CLOCK_SPI1>;
+			clock-names = "dspi";
+			dmas = <&edma 0 16>, <&edma 0 17>;
+			dma-names = "rx","tx";
+			spi-num-chipselects = <4>;
+			status = "disabled";
+		};
+
+		dspi2: dspi2@400ac000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "fsl,kinetis-dspi", "fsl,vf610-dspi";
+			reg = <0x400ac000 0x1000>;
+			interrupts = <28>;
+			clocks = <&mcg CLOCK_SPI2>;
+			clock-names = "dspi";
+			dmas = <&edma 0 18>, <&edma 0 19>;
+			dma-names = "rx","tx";
+			spi-num-chipselects = <4>;
+			status = "disabled";
+		};
+
+		i2c0: i2c@40066000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "fsl,kinetis-i2c", "fsl,vf610-i2c";
+			reg = <0x40066000 0x1000>;
+			interrupts = <24>;
+			clocks = <&mcg CLOCK_I2C0>;
+			clock-names = "ipg";
+			dmas = <&edma 0 20>, <&edma 0 21>;
+			dma-names = "rx","tx";
+			status = "disabled";
+		};
+
+		i2c1: i2c@40067000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "fsl,kinetis-i2c", "fsl,vf610-i2c";
+			reg = <0x40067000 0x1000>;
+			interrupts = <25>;
+			clocks = <&mcg CLOCK_I2C1>;
+			clock-names = "ipg";
+			dmas = <&edma 0 22>, <&edma 0 23>;
+			dma-names = "rx","tx";
+			status = "disabled";
+		};
+
+		nfc: nand@400a8000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "fsl,vf610-nfc";
+			reg = <0x400a8000 0x4000>;
+			interrupts = <95>;
+			clocks = <&nfc_clk>;
+			clock-names = "nfc";
+			status = "disabled";
+		};
+
+		esdhc0: esdhc@400b1000 {
+			compatible = "fsl,kinetis-esdhc";
+			reg = <0x400b1000 0x1000>;
+			interrupts = <80>;
+			clocks = <&sdhc_clk>, <&sdhc_clk>, <&sdhc_clk>;
+			clock-names = "ipg", "ahb", "per";
+			status = "disabled";
+		};
+
+		usbfs: usbfs@40072000 {
+			compatible = "fsl,kinetis-khci";
+			reg = <0x40072000 0x200>;
+			interrupts = <73>;
+			clocks = <&mcg CLOCK_USBFS>;
+			clock-names = "khci";
+			status = "disabled";
+		};
+
+		usb_phy_hs: phy_hs {
+			compatible = "usb-nop-xceiv";
+			clocks = <&usbhs_clk>;
+			clock-names = "main_clk";
+			#phy-cells = <0>;
+		};
+
+		usbmisc0: usbm@40034800 {
+			#index-cells = <1>;
+			compatible = "fsl,vf610-usbmisc";
+			/* fake device, there are no such reg region */
+			reg = <0x40034800 0x200>;
+			status = "disabled";
+		};
+
+		usbhs: usbhs@40034000 {
+			compatible = "fsl,imx27-usb";
+			reg = <0x40034000 0x400>;
+			interrupts = <96>;
+			fsl,usbphy = <&usb_phy_hs>;
+			fsl,usbmisc = <&usbmisc0 0>;
+			clocks = <&mcg CLOCK_USBHS>;
+			clock-names = "hs_clk";
+			status = "disabled";
+		};
+
+		adc: adc {
+			compatible = "fsl,kinetis-adc";
+			reg = <0x4003b000 0x100>, <0x400bb000 0x100>,
+				<0x4003c000 0x100>, <0x400bc000 0x100>;
+			clocks = <&mcg CLOCK_ADC0>, <&mcg CLOCK_ADC1>,
+				<&mcg CLOCK_ADC2>, <&mcg CLOCK_ADC3>;
+			clock-names = "adc0", "adc1", "adc2", "adc3";
+		};
+
+		can0: flexcan@40024000 {
+			compatible = "fsl,kinetis-flexcan";
+			reg = <0x40024000 0x4000>;
+			interrupts = <29>, <30>, <31>, <32>, <33>, <34>;
+			clocks = <&mcg CLOCK_CAN0>,
+				<&mcg CLOCK_PCLK>;
+			clock-names = "ipg", "per";
+			status = "disabled";
+		};
+
+		can1: flexcan@400a4000 {
+			compatible = "fsl,kinetis-flexcan";
+			reg = <0x400a4000 0x4000>;
+			interrupts = <37>, <38>, <39>, <40>, <41>, <42>;
+			clocks = <&mcg CLOCK_CAN1>,
+				<&mcg CLOCK_PCLK>;
+			clock-names = "ipg", "per";
+			status = "disabled";
+		};
+	};
+};
