@@ -115,3 +115,4 @@ all.config
 
 rootfs.cpio
 arch/arm/boot/dts/emcraft.dts
+arch/arm/boot/dts/IMXRT105X_NXPEVK-SOM.dts
